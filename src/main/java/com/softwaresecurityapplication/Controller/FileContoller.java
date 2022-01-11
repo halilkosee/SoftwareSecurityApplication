@@ -27,7 +27,7 @@ public class FileContoller {
     @PostMapping
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
         try {
-           
+            fileService.save(file);
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));

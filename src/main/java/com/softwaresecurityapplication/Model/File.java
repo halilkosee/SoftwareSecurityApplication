@@ -23,9 +23,6 @@ public class File {
     @Lob
     private byte[] data;
 
-    @ManyToMany(mappedBy = "files")
-    private Collection<User> users;
-
 
     public File() {
     }
@@ -71,11 +68,4 @@ public class File {
         this.data = data;
     }
 
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
 }

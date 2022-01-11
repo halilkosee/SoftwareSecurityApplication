@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,25 @@ public class UserController {
         return userRepository.findById(user_id);
     }
 
-    //TODO will be designed later
+    @GetMapping(value = "/currentUserName")
+    public String currentUserName(Principal principal) {
+        return principal.getName();
+    }
+
+    @GetMapping(value = "/currentUserId")
+    public Long currentUserId(Principal principal) {
+        return (userRepository.findByUsername(principal.getName())).get().getId();
+    }
+
+    @GetMapping(value = "/currentUser")
+    public Optional<User> currentUser(Principal principal) {
+        return userRepository.findByUsername(principal.getName());
+    }
+
+
+
+    //TODO it had better if this part would be designed
+
     @PostMapping("/save")
     private User create(@RequestBody final User user) {
         return userRepository.save(user);

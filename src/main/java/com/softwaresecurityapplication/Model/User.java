@@ -1,5 +1,6 @@
 package com.softwaresecurityapplication.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -34,6 +35,7 @@ public class User {
     @Size(max = 20)
     private String surname;
 
+    @JsonIgnore
     @NotBlank
     @Size(max = 120)
     private String password;
@@ -57,13 +59,13 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_file",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "file_id")
     )
-    private Collection<File> files;
+    private Set<File> files;
 
     public User() {
     }
@@ -159,7 +161,7 @@ public class User {
         return files;
     }
 
-    public void setFiles(Collection<File> files) {
+    public void setFiles(Set<File> files) {
         this.files = files;
     }
 }
