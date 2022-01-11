@@ -2,8 +2,8 @@ package com.softwaresecurityapplication.Controller;
 
 import com.softwaresecurityapplication.Model.File;
 import com.softwaresecurityapplication.Model.Payload.response.FileResponse;
-import com.softwaresecurityapplication.Repository.FileRepository;
 import com.softwaresecurityapplication.Service.FileService;
+import com.softwaresecurityapplication.Service.Impl.FileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,12 +21,8 @@ import java.util.stream.Collectors;
 @RequestMapping("api/v1/file")
 public class FileContoller {
 
-    private final FileRepository fileRepository;
-
     @Autowired
-    public FileContoller(FileRepository fileRepository) {
-        this.fileRepository = fileRepository;
-    }
+    private FileServiceImpl fileService;
 
     @PostMapping
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
@@ -39,10 +35,6 @@ public class FileContoller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(String.format("Could not upload the file: %s!", file.getOriginalFilename()));
         }
-    }
-
-    private FileRepository getFileRepository() {
-        return fileRepository;
     }
 
     @GetMapping

@@ -4,6 +4,7 @@ import com.softwaresecurityapplication.Model.File;
 import com.softwaresecurityapplication.Repository.FileRepository;
 import com.softwaresecurityapplication.Service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,14 +12,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class FileServiceImpl implements FileService {
-
-    private final FileRepository fileRepository;
+@Service
+public class FileServiceImpl{
 
     @Autowired
-    public FileServiceImpl(FileRepository fileRepository) {
-        this.fileRepository = fileRepository;
-    }
+    private FileRepository fileRepository;
 
     public void save(MultipartFile file) throws IOException {
         File fileEntity = new File();
@@ -38,27 +36,22 @@ public class FileServiceImpl implements FileService {
         return fileRepository.findAll();
     }
 
-    @Override
     public List<File> findAllFiles() {
         return null;
     }
 
-    @Override
     public File findFileById(Long file_id) {
         return null;
     }
 
-    @Override
     public File saveFile(File file) {
         return null;
     }
 
-    @Override
     public File updateFile(File file) {
         return null;
     }
 
-    @Override
     public void deleteFile(File file) {
 
     }

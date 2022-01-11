@@ -3,7 +3,6 @@ package com.softwaresecurityapplication.Service.Impl;
 import com.softwaresecurityapplication.Repository.UserRepository;
 import com.softwaresecurityapplication.Advice.TokenRefreshException;
 import com.softwaresecurityapplication.Repository.RefreshTokenRepository;
-import com.softwaresecurityapplication.Service.RefreshTokenService;
 
 import com.softwaresecurityapplication.Model.RefreshToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class RefreshTokenServiceImpl implements RefreshTokenService {
+public class RefreshTokenServiceImpl {
     @Value("${cv.app.jwtRefreshExpirationMs}")
     private Long refreshTokenDurationMs;
 
@@ -26,12 +25,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Autowired
     private UserRepository userRepository;
 
-    @Override
     public Optional<RefreshToken> findByToken(String token) {
         return refreshTokenRepository.findByToken(token);
     }
 
-    @Override
     public RefreshToken createRefreshToken(Long userId) {
         RefreshToken refreshToken = new RefreshToken();
 
@@ -43,7 +40,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return refreshToken;
     }
 
-    @Override
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
@@ -53,9 +49,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return token;
     }
 
-
     @Transactional
-    @Override
     public int deleteByUserId(Long userId) {
         return refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
     }

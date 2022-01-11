@@ -20,6 +20,7 @@ import com.softwaresecurityapplication.Model.Payload.request.TokenRefreshRequest
 import com.softwaresecurityapplication.Model.Payload.response.JwtResponse;
 import com.softwaresecurityapplication.Model.Payload.response.MessageResponse;
 import com.softwaresecurityapplication.Model.Payload.response.TokenRefreshResponse;
+import com.softwaresecurityapplication.Service.Impl.RefreshTokenServiceImpl;
 import com.softwaresecurityapplication.Service.RefreshTokenService;
 import com.softwaresecurityapplication.Service.Impl.UserDetailsImpl;
 import com.softwaresecurityapplication.Model.RefreshToken;
@@ -61,7 +62,7 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @Autowired
-    RefreshTokenService refreshTokenService;
+    RefreshTokenServiceImpl refreshTokenService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
