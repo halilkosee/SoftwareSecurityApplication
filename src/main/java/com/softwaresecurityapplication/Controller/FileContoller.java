@@ -1,8 +1,8 @@
 package com.softwaresecurityapplication.Controller;
 
-import com.softwaresecurityapplication.Advice.AnalyseResult;
 import com.softwaresecurityapplication.Model.File;
 import com.softwaresecurityapplication.Model.Payload.request.FileAnalyseRequest;
+import com.softwaresecurityapplication.Model.Payload.response.AnalyseResult;
 import com.softwaresecurityapplication.Model.Payload.response.FileResponse;
 import com.softwaresecurityapplication.Service.Impl.FileServiceImpl;
 import com.softwaresecurityapplication.Service.Impl.UserServiceImpl;
@@ -16,10 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -45,7 +43,7 @@ public class FileContoller {
         }
     }
     @GetMapping("analyse")
-    public File analyse(@RequestBody FileAnalyseRequest fileAnalyseRequest) {
+    public List<AnalyseResult> analyse(@RequestBody FileAnalyseRequest fileAnalyseRequest) {
         try {
             return fileService.analyse(fileAnalyseRequest.getFileName());
         } catch (IOException e) {

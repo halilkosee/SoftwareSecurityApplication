@@ -1,6 +1,7 @@
 package com.softwaresecurityapplication.Service.Impl;
 
 import com.softwaresecurityapplication.Model.File;
+import com.softwaresecurityapplication.Model.Payload.response.AnalyseResult;
 import com.softwaresecurityapplication.Model.User;
 import com.softwaresecurityapplication.Repository.FileRepository;
 import com.softwaresecurityapplication.Repository.UserRepository;
@@ -21,6 +22,7 @@ import java.util.*;
 public class FileServiceImpl {
 
     private final Path root = Paths.get("uploads");
+    final String riskyWords[] = {"sql","password","CREATE","UPDATE","INSERT","DELETE","DB","Database","username","gsm","email"};
 
     @Autowired
     private UserRepository userRepository;
@@ -46,16 +48,16 @@ public class FileServiceImpl {
         saveFileAndUpdateUser(fileEntity);
     }
 
-    public File analyse(String fileName) throws IOException{
+    public List<AnalyseResult> analyse(String fileName) throws IOException {
        File file = getFileRelatedWithUser(fileName);
-       String content = readFileContent(file);
-       return file;
+       List<AnalyseResult> content = readFileContent(file);
+       return content;
     }
 
-    private String readFileContent (File file) throws IOException {
+    private List<AnalyseResult> readFileContent (File file) throws IOException {
         Path path = Path.of(file.getFilePath());
-        displayMap((HashMap<Integer, String>) readFileContentToMap(path));
-        return "null";
+        List<AnalyseResult> results = displayMapAndGetResults((HashMap<Integer, String>) readFileContentToMap(path));
+        return results;
     }
 
     public Map<Integer,String> readFileContentToMap(Path path) throws IOException {
@@ -72,10 +74,33 @@ public class FileServiceImpl {
         return  map;
     }
 
-    private void displayMap(HashMap<Integer, String> map) {
+    private List<AnalyseResult> displayMapAndGetResults(HashMap<Integer, String> map) {
+        List<AnalyseResult> results = new ArrayList<>();
         for (int key : map.keySet()) {
             System.out.println(key + ":" + map.get(key));
+            if (checkLine(map.get(key))){
+                results.add(convertAnalyseResult(key,map.get(key),"string"));
+            }
         }
+       return results;
+    }
+
+    private AnalyseResult convertAnalyseResult(int key, String s, String risk) {
+        AnalyseResult analyseResult = new AnalyseResult(calculateRiskPercentage(1,100),risk,key,s);
+        return analyseResult;
+    }
+    private double calculateRiskPercentage(int upper,int lower) {
+        return (double) (Math.random() * (upper - lower)) + lower;
+    }
+
+
+    private boolean checkLine(String line) {
+        for (String k: riskyWords) {
+            if (line.contains(k)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<File> getUserRelatedFiles() {
