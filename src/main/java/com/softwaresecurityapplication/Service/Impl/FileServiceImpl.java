@@ -1,7 +1,6 @@
 package com.softwaresecurityapplication.Service.Impl;
 
 import com.softwaresecurityapplication.Model.File;
-import com.softwaresecurityapplication.Model.Role;
 import com.softwaresecurityapplication.Model.User;
 import com.softwaresecurityapplication.Repository.FileRepository;
 import com.softwaresecurityapplication.Repository.UserRepository;
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,14 +49,33 @@ public class FileServiceImpl {
     public File analyse(String fileName) throws IOException{
        File file = getFileRelatedWithUser(fileName);
        String content = readFileContent(file);
-       System.out.print(content);
        return file;
     }
 
     private String readFileContent (File file) throws IOException {
         Path path = Path.of(file.getFilePath());
-        String actual = Files.readString(path);
-        return actual;
+        displayMap((HashMap<Integer, String>) readFileContentToMap(path));
+        return "null";
+    }
+
+    public Map<Integer,String> readFileContentToMap(Path path) throws IOException {
+        HashMap<Integer, String> map = new HashMap<Integer, String>();
+        String line;
+        int line_index = 0;
+        BufferedReader reader = new BufferedReader(new FileReader(String.valueOf(path)));
+        while ((line = reader.readLine()) != null)
+        {
+            map.put(line_index, line);
+            line_index++;
+        }
+        reader.close();
+        return  map;
+    }
+
+    private void displayMap(HashMap<Integer, String> map) {
+        for (int key : map.keySet()) {
+            System.out.println(key + ":" + map.get(key));
+        }
     }
 
     public List<File> getUserRelatedFiles() {
