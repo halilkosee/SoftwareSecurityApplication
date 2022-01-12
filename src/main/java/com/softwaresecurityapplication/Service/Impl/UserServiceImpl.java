@@ -3,6 +3,9 @@ package com.softwaresecurityapplication.Service.Impl;
 import com.softwaresecurityapplication.Model.User;
 import com.softwaresecurityapplication.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,8 +45,19 @@ public class UserServiceImpl {
         return userRepository.existsByEmail(email);
     }
 
-    public Optional<User> findByUsername(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    public String curentUserName() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return userDetails.getUsername();
+    }
+
+    public User currentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return userRepository.findByUsername(userDetails.getUsername());
+    }
 }

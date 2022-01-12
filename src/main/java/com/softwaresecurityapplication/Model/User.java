@@ -65,7 +65,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "file_id")
     )
-    private Set<File> files;
+    private Set<File> files = new HashSet<>();
 
     public User() {
     }

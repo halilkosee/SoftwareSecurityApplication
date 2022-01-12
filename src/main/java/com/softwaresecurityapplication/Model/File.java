@@ -3,7 +3,6 @@ package com.softwaresecurityapplication.Model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 
 @Entity
@@ -23,6 +22,7 @@ public class File {
     @Lob
     private byte[] data;
 
+    private String filePath;
 
     public File() {
     }
@@ -68,4 +68,11 @@ public class File {
         this.data = data;
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 }

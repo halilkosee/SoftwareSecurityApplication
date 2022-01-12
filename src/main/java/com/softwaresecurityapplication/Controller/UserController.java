@@ -2,6 +2,7 @@ package com.softwaresecurityapplication.Controller;
 
 import com.softwaresecurityapplication.Model.User;
 import com.softwaresecurityapplication.Repository.UserRepository;
+import com.softwaresecurityapplication.Service.Impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,9 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserServiceImpl userService;
+
     @GetMapping("/users")
     private List<User> users() {
         return userRepository.findAll();
@@ -30,21 +34,14 @@ public class UserController {
     }
 
     @GetMapping(value = "/currentUserName")
-    public String currentUserName(Principal principal) {
-        return principal.getName();
+    public String currentUserName() {
+        return userService.curentUserName();
     }
 
     @GetMapping(value = "/currentUserId")
     public Long currentUserId(Principal principal) {
-        return (userRepository.findByUsername(principal.getName())).get().getId();
+        return (userRepository.findByUsername(principal.getName())).getId();
     }
-
-    @GetMapping(value = "/currentUser")
-    public Optional<User> currentUser(Principal principal) {
-        return userRepository.findByUsername(principal.getName());
-    }
-
-
 
     //TODO it had better if this part would be designed
 
