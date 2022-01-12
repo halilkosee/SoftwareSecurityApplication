@@ -1,2 +1,2 @@
 # SoftwareSecurityApplication
- Tracking Security Vulnarabilities on Software
+ Tracking Security Vulnerabilities on Software
