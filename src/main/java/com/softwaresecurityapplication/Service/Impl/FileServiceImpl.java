@@ -79,10 +79,26 @@ public class FileServiceImpl {
         for (int key : map.keySet()) {
             System.out.println(key + ":" + map.get(key));
             if (checkLine(map.get(key))){
-                results.add(convertAnalyseResult(key,map.get(key),"string"));
+                results.add(convertAnalyseResult(key,map.get(key),findType(map.get(key))));
             }
         }
        return results;
+    }
+    
+    private String findType (String a) {
+            String types = null;
+        for (String k: riskyWords) {
+            if (a.contains(k)){
+                if (types == null){
+                    types = k;
+
+                }else{
+                    types = types + "," + k;
+                }
+
+            }
+        }
+        return types;
     }
 
     private AnalyseResult convertAnalyseResult(int key, String s, String risk) {
@@ -171,6 +187,5 @@ public class FileServiceImpl {
     }
 
     public void deleteFile(File file) {
-
     }
 }
