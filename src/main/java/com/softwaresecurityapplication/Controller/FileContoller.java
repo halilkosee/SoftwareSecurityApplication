@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/file")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class FileContoller {
 
     @Autowired
@@ -30,7 +32,7 @@ public class FileContoller {
     @Autowired
     private UserServiceImpl userService;
 
-    @PostMapping
+    @PostMapping("/upload")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
         try {
             fileService.save(file);
@@ -42,7 +44,7 @@ public class FileContoller {
                     .body(String.format("Could not upload the file: %s!", file.getOriginalFilename()));
         }
     }
-    @GetMapping("analyse")
+    @PostMapping("analyse")
     public List<AnalyseResult> analyse(@RequestBody FileAnalyseRequest fileAnalyseRequest) {
         try {
             return fileService.analyse(fileAnalyseRequest.getFileName());
@@ -62,7 +64,7 @@ public class FileContoller {
 
     @GetMapping
     public List<FileResponse> list() {
-        return fileService.getAllFiles()
+        return fileService.getUserRelatedFiles()
                 .stream()
                 .map(this::mapToFileResponse)
                 .collect(Collectors.toList());

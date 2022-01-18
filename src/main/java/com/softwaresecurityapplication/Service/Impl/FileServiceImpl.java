@@ -129,9 +129,10 @@ public class FileServiceImpl {
         fileRepository.save(fileEntity);
         User user = userService.currentUser();
         Set<File> userFiles = (Set<File>) user.getFiles();
-        userFiles.add(fileEntity);
+      /*  userFiles.add(fileEntity);
         user.setFiles(userFiles);
         userService.updateUser(user);
+        */
     }
 
     private String generatePath() throws IOException {
