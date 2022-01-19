@@ -1,18 +1,21 @@
 package com.softwaresecurityapplication.Model.Payload.response;
 
-import com.softwaresecurityapplication.Enum.EVulnerabilityType;
-
 public class AnalyseResult {
-    private double warningRate;
+    private int warningRate;
     private String vulnerabilityType;
     private int detectedLineNumber;
     private String detectedLine;
+    private String successCode;
 
-    public AnalyseResult(double warningRate, String vulnerabilityType, int detectedLineNumber, String detectedLine) {
+    public AnalyseResult(int warningRate, String vulnerabilityType, int detectedLineNumber, String detectedLine) {
         this.warningRate = warningRate;
         this.vulnerabilityType = vulnerabilityType;
         this.detectedLineNumber = detectedLineNumber;
         this.detectedLine = detectedLine;
+    }
+
+    public AnalyseResult(String successCode) {
+        this.successCode = successCode;
     }
 
     @Override
@@ -25,11 +28,11 @@ public class AnalyseResult {
                 '}';
     }
 
-    public double getWarningRate() {
+    public int getWarningRate() {
         return warningRate;
     }
 
-    public void setWarningRate(double warningRate) {
+    public void setWarningRate(int warningRate) {
         this.warningRate = warningRate;
     }
 
@@ -55,5 +58,13 @@ public class AnalyseResult {
 
     public void setDetectedLine(String detectedLine) {
         this.detectedLine = detectedLine;
+    }
+
+    public String getSuccessCode() {
+        return successCode;
+    }
+
+    public void setSuccessCode(String successCode) {
+        this.successCode = successCode;
     }
 }

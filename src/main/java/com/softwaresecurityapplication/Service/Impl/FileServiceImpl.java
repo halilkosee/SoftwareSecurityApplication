@@ -23,6 +23,7 @@ public class FileServiceImpl {
 
     private final Path root = Paths.get("uploads");
     final String riskyWords[] = {"sql","password","CREATE","UPDATE","INSERT","DELETE","DB","Database","username","gsm","email"};
+    List<String> congrats = new ArrayList<String>();
 
     @Autowired
     private UserRepository userRepository;
@@ -57,6 +58,10 @@ public class FileServiceImpl {
     private List<AnalyseResult> readFileContent (File file) throws IOException {
         Path path = Path.of(file.getFilePath());
         List<AnalyseResult> results = displayMapAndGetResults((HashMap<Integer, String>) readFileContentToMap(path));
+        if (results.isEmpty()){
+            AnalyseResult resultSuccess = new AnalyseResult(calculateRandomCongrats());
+            return Collections.singletonList(resultSuccess);
+        }
         return results;
     }
 
@@ -105,10 +110,24 @@ public class FileServiceImpl {
         AnalyseResult analyseResult = new AnalyseResult(calculateRiskPercentage(1,100),risk,key,s);
         return analyseResult;
     }
-    private double calculateRiskPercentage(int upper,int lower) {
-        return (double) (Math.random() * (upper - lower)) + lower;
+    private int calculateRiskPercentage(int upper,int lower) {
+        return (int) ((Math.random() * (upper - lower)) + lower);
     }
 
+    private String calculateRandomCongrats() {
+        congrats.add("What a clean code...");
+        congrats.add("A software developer who spent years...");
+        congrats.add("You should be the developer of the year...");
+        congrats.add("It's obvious you're from GTU...");
+        congrats.add("Dude you are great. You do not need me...");
+        congrats.add("Do you want to get me fired?..");
+        congrats.add("I'm sure you're antisocial...");
+        congrats.add("Did your father write like this?..");
+        congrats.add("Are you human or robot?..");
+        congrats.add("Are you my creator Halil?..");
+        int a = (int) ((Math.random() * (10 - 0)) + 0);
+        return congrats.get(a);
+    }
 
     private boolean checkLine(String line) {
         for (String k: riskyWords) {
@@ -119,13 +138,28 @@ public class FileServiceImpl {
         return false;
     }
 
+    public void delete(String fileName) throws IOException {
+       List<File> userRelatedFiles = getUserRelatedFiles();
+        for (File f: userRelatedFiles) {
+            if(f.getFilePath().contains(fileName)){
+                if (Files.isRegularFile(Path.of(f.getFilePath()))){
+                    Files.delete(Path.of(f.getFilePath()));
+                    fileRepository.delete(f);
+                }
+            }
+        }
+
+    }
+
     public List<File> getUserRelatedFiles() {
         User user = userService.currentUser();
         List<File> fileList = fileRepository.findAll();
         List<File> fileList1 = new ArrayList<>();
         for (File f: fileList) {
             if(f.getFilePath().contains(user.getUsername())){
-                fileList1.add(f);
+                if (Files.isRegularFile(Path.of(f.getFilePath()))){
+                    fileList1.add(f);
+                }
             }
         }
         return fileList1;
@@ -145,10 +179,9 @@ public class FileServiceImpl {
         fileRepository.save(fileEntity);
         User user = userService.currentUser();
         Set<File> userFiles = (Set<File>) user.getFiles();
-      /*  userFiles.add(fileEntity);
-        user.setFiles(userFiles);
-        userService.updateUser(user);
-        */
+        //userFiles.add(fileEntity);
+        //user.setFiles(userFiles);
+        //userService.updateUser(user);
     }
 
     private String generatePath() throws IOException {
@@ -188,4 +221,5 @@ public class FileServiceImpl {
 
     public void deleteFile(File file) {
     }
+
 }
